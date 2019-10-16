@@ -16,7 +16,7 @@ Inorder to deploy the solution in EDP account, you will need to use the Cloudfor
 
 **IMPORTANT** Run the Cloudformation templates inn the same region where your Aurora clusters run (both in the source and destination regions). 
 
-### Source Account
+### Source Region
 #### Components
 
 The following components will be created in the source account: 
@@ -63,7 +63,7 @@ Here is a break down of each parameter for the source template:
 * **KmsKeySource** KMS Key to be used for copying encrypted snapshots on the source region. If you are copying to a different region, you will also need to provide a second key in the destination region. 
 * **KmsKeyDestination** KMS Key to be used for copying encrypted snapshots to the destination region.
 
-### Destination Account
+### Destination Region
 #### Components
 
 The following components will be created in the destination account: 
