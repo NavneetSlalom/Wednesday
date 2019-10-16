@@ -19,9 +19,9 @@ Inorder to deploy the solution in EDP account, you will need to use the Cloudfor
 ### Source Region
 #### Components
 
-The following components will be created in the source account: 
+The following components will be created in the source region: 
 
-##### Initial Setup(TO BE EXECUTED ONLY FIRST TIME IN SOURCE ACCOUNT):
+##### Initial Setup(TO BE EXECUTED FIRST TIME ONLY):
 
 IAM Roles
 * 3 IAM Roles to execute Lambda functions, Step Function invocation and Execution
@@ -41,11 +41,11 @@ Lambda Functions
 * 1 Cloudwatch Alarms and 1 associated SNS Topic to alert on State Machines failures
 * A Cloudformation stack containing these resources
 
-#### Installing in the source account 
+#### Installing in the source region 
 
-1. Run Following command on Stacker to setup IAM Roles (FIRST TIME ONLY):
-2. Run Following command on Stacker to setup LAMBDA FUNCTIONS (FIRST TIME ONLY):
-3. Run Following command on Stacker to setup Cluster Specific DR resources:
+##### STEP 1. Run the following Stacker command to setup IAM Roles (FIRST TIME ONLY):
+##### STEP 2. Run the following Stacker command to setup LAMBDA FUNCTIONS (FIRST TIME ONLY):
+##### STEP 3. Run the following Stacker command to setup Cluster Specific DR resources:
 
 You will need to specify the different parameters in env file to meet the cluster specific backup requirements.
 
@@ -54,7 +54,7 @@ Here is a break down of each parameter for the source template:
 * **BackupInterval** - how many hours between backup
 * **BackupSchedule** - at what times and how often to run backups. Set in accordance with **BackupInterval**. For example, set **BackupInterval** to 8 hours and **BackupSchedule** 0 0,8,16 * * ? * if you want backups to run at 0, 8 and 16 UTC. If your backups run more often than **BackupInterval**, snapshots will only be created when the latest snapshot is older than **BackupInterval**
 * **ClusterNamePattern** - set to the name of the cluster you want this tool to back up. This tool supports backup of one cluster at a time. 
-* **DestinationRegion** - the account where you want snapshots to be copied to
+* **DestinationRegion** - the region where you want snapshots to be copied to
 * **LogLevel** - The log level you want as output to the Lambda functions. ERROR is usually enough. You can increase to INFO or DEBUG. 
 * **RetentionDays** - the amount of days you want your snapshots to be kept. Snapshots created more than **RetentionDays** ago will be automatically deleted (only if they contain a tag with Key: CreatedBy, Value: Snapshot Tool for Aurora)
 * **CodeBucket** - this parameter specifies the bucket where the code for the Lambda functions is located.  
@@ -66,13 +66,15 @@ Here is a break down of each parameter for the source template:
 ### Destination Region
 #### Components
 
-The following components will be created in the destination account: 
+The following components will be created in the destination region: 
 
-##### Initial Setup(TO BE EXECUTED ONLY FIRST TIME IN DESTINATION ACCOUNT):
+##### Initial Setup(TO BE EXECUTED FIRST TIME ONLY):
 
 Lambda Functions
 * 1 Lambda functions (DeleteOldSnapshotsAurora)
 * A Cloudformation stack containing these these resources
+
+***NOTE*** Create an S3 bucket to hold the Lambda function zip files. The bucket must be in the same region where the Lambda functions will run. And the Lambda functions must run in the same region as the RDS instances.
 
 ##### Cluster specific Setup:
 
@@ -81,10 +83,10 @@ Lambda Functions
 * 1 Cloudwatch Alarms and 1 associated SNS Topic to alert on State Machines failures
 * A Cloudformation stack containing these resources
 
-#### Installing in the destination account 
+#### Installing in the destination region 
 
-1. Run Following command on Stacker to setup LAMBDA FUNCTIONS (FIRST TIME ONLY):
-2. Run Following command on Stacker to setup Cluster Specific DR resources:
+##### STEP 1. Run the following Stacker command to setup LAMBDA FUNCTIONS (FIRST TIME ONLY):
+##### STEP 2. Run the following Stacker command to setup Cluster Specific DR resources:
 
 As before, you will need to run it in a region where Step Functions is available. 
 The following parameters are available:
